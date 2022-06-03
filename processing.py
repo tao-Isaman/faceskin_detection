@@ -9,14 +9,14 @@ def detect_yellow(img: bytes) -> bytes:
     # img = cv2.imread('image.png')
 
     # convert to hsv colorspace
-    # hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    hsv = cv2.cvtColor(cv2_img, cv2.COLOR_BGR2HSV)
 
     # lower bound and upper bound for Green color
-    lower_bound = np.array([0, 0, 160])   
-    upper_bound = np.array([100, 255, 255])
+    lower_bound = np.array([22, 100, 100])   
+    upper_bound = np.array([38, 255, 255])
 
     # find the colors within the boundaries
-    mask = cv2.inRange(cv2_img, lower_bound, upper_bound)
+    mask = cv2.inRange(hsv, lower_bound, upper_bound)
     cv2.imwrite('yellow.jpg', mask)
     
     image_bytes = cv2.imencode('.jpg', mask)

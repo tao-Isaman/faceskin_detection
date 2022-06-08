@@ -4,6 +4,7 @@ import streamlit as st
 from PIL import Image
 
 from processing import detect_color
+from model.color_parameter import ColorParameter
 
 st.title('Simple image product !')
 
@@ -36,7 +37,20 @@ if img_file_buffer is not None:
     # To read image file buffer as bytes:
     bytes_data = img_file_buffer.getvalue()
     
-    img, res = detect_color(bytes_data, h_min, h_max, s_min, v_min, h_red_min, h_red_max, check_red) 
+    # bytes_data, h_min, h_max, s_min, v_min, h_red_min, h_red_max, check_red
+    
+    parameter = ColorParameter(
+        bytes_data,
+        h_min,
+        h_max,
+        s_min,
+        v_min,
+        h_red_min,
+        h_red_max,
+        check_red
+    )
+    
+    img, res = detect_color(parameter) 
     
     image_mask = Image.open('mask.jpg')
     # st.image(image_mask, 'Color Masking')

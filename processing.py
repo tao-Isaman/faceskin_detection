@@ -2,22 +2,24 @@
 import cv2
 import numpy as np
 
-def detect_color(img: bytes, h_min: int, h_max: int, s_min: int, v_min: int, h_red_min: int, h_red_max: int, check_red: bool) -> bytes:
+from model.color_parameter import ColorParameter
+
+def detect_color(color_parameter: ColorParameter) -> bytes:
     # Reading the image
-    cv2_img = cv2.imdecode(np.frombuffer(img, np.uint8), cv2.IMREAD_COLOR)
+    cv2_img = cv2.imdecode(np.frombuffer(color_parameter.img, np.uint8), cv2.IMREAD_COLOR)
     
     # convert to hsv color space
     hsv = cv2.cvtColor(cv2_img, cv2.COLOR_BGR2HSV)
 
     # lower bound and upper bound for Green color
     # lower boundary RED color range values; Hue (0 - 10)
-    lower_bound = np.array([h_min, s_min, v_min])   
-    upper_bound = np.array([h_max, 255, 255])
+    lower_bound = np.array([color_parameter.h_min, color_parameter.s_min, color_parameter.v_min])   
+    upper_bound = np.array([color_parameter.h_max, 255, 255])
 
-    if check_red:
+    if color_parameter.check_red:
         # upper boundary RED color range values; Hue (160 - 180)
-        lower_bound_red = np.array([h_red_min, s_min, v_min])   
-        upper_bound_red = np.array([h_red_max, 255, 255])
+        lower_bound_red = np.array([color_parameter.h_red_min, color_parameter.s_min, color_parameter.v_min])   
+        upper_bound_red = np.array([color_parameter.h_red_max, 255, 255])
 
         lower_mask = cv2.inRange(hsv, lower_bound, upper_bound)
         upper_mask = cv2.inRange(hsv, lower_bound_red, upper_bound_red)
